@@ -3,6 +3,7 @@
   <title>Speak good or remain silent </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="google-signin-client_id" content="221950823044-m3mr43156a7bi05lla7a1jdm6a7ctieq.apps.googleusercontent.com">
   <link href="/css/bootstrap.css" rel="stylesheet">
   <link href="/css/custom.css" rel="stylesheet">
   <link rel="icon" href="/images/chat_logo.png" type="image/x-icon"/>
@@ -19,7 +20,10 @@
      <input id="nickname" type="text" autofocus required 
             placeholder="Your nickname" />
      <input class="btn btn-danger" type="submit" value="Submit"/>
+     <div class="g-signin2" data-onsuccess="onSignIn"></div>
+     
    </form>
+     
  </div>
 </div>
 
@@ -59,7 +63,7 @@
 <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/bootstrap.js"></script>
-
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <script>
     jQuery(function($){
       var socket = io.connect();
