@@ -7,6 +7,7 @@
   <link href="/css/bootstrap.css" rel="stylesheet">
   <link href="/css/custom.css" rel="stylesheet">
   <link rel="icon" href="/images/chat_logo.png" type="image/x-icon"/>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.min.js"></script>
 </head>
 
@@ -65,9 +66,16 @@
 <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/bootstrap.js"></script>
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 
 <script>
+  function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
   var app = angular.module('googleApiApp',[]);
   app.controller('googleApiController',function($scope){
     $scope.aj = function(){
