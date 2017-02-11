@@ -9,7 +9,8 @@
   <link rel="icon" href="/images/chat_logo.png" type="image/x-icon"/>
 </head>
 
-<body>
+<body ng-app="googleApiApp">
+  <div ng-controller="googleApiController">
  <!--  nickname page  -->
  <div id="nickPage" class="" align="center">
    <img height="300" width="300" class="img-circle" src="/images/minion.jpg"/>
@@ -59,11 +60,28 @@
       </div>
     </div>
 </div> <!--div id="chatWindow" -->
-
+  </div>
 <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/bootstrap.js"></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular-animate.min.js"></script>
+<script>
+  var app = angular.module('googleApiApp',[]);
+  app.controller('googleApiController',function($scope){
+    $scope.aj = function(){
+      if (auth2.isSignedIn.get()) {
+        var profile = auth2.currentUser.get().getBasicProfile();
+        console.log('ID: ' + profile.getId());
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail());
+      } 
+    }
+  })
+</script>
 <script>
     jQuery(function($){
       var socket = io.connect();
