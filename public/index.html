@@ -1,172 +1,88 @@
+<!DOCTYPE html>
 <html>
-<head>
-  <title>Speak good or remain silent </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="google-signin-client_id" content="221950823044-m3mr43156a7bi05lla7a1jdm6a7ctieq.apps.googleusercontent.com">
-  <link href="/css/bootstrap.css" rel="stylesheet">
-  <link href="/css/custom.css" rel="stylesheet">
-  <link rel="icon" href="/images/chat_logo.png" type="image/x-icon"/>
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.min.js"></script>
-</head>
+<body>
 
-<body ng-app="googleApiApp">
-  <div ng-controller="googleApiController">
- <!--  nickname page  -->
- <div id="nickPage" class="" align="center">
-   <img height="300" width="300" class="img-circle" src="/images/minion.jpg"/>
-     <h3>Pick your super awesome nickname</h3>
-   <p id="nickError"></p>
-   <div class="form-group">
-   <form id="nickForm" >
-     <input id="nickname" type="text" autofocus required 
-            placeholder="Your nickname" />
-     <input class="btn btn-danger" type="submit" value="Submit"/>
-     <div class="g-signin2" data-onsuccess="onSignIn"></div>
-     <button ng-click="aj()">aj</button>
-   </form>
-     
- </div>
-</div>
+<h1>My First Google Map</h1>
 
-<!-- chat page  -->
-<div id="chatPage" class="container">
-  <!-- Whiteboard -->
-    <div class="col-md-6 col-sm-offset-1 panel panel-primary">
-        <div class="panel-body">
-           <div id="contentWrap" >
-              <div id="chatWrap" style=" border-radius: 10px;
-                  background: #F0E0B0;background: url(/images/wood.jpg);min-height: 400;max-height: 400;overflow-y: scroll;">
-                  <div id="chat"></div>
-              </div>
-           </div>
-        </div>
-    </div>
-    <!-- Chat textarea  -->
-    <div class="col-md-3 col-md-offset-0">
-        <form id="message-box">
-          <div class="form-group">
-           <textarea required autofocus style="background-color:#ffffe6;border:double 4px orange;border-radius: 0.5em;" 
-              rows="2" cols="40" 
-             id="message" placeholder="Write your message and press enter.."></textarea>
-             <code>@john  Hello</code> to say Hello to john privately
-          </div>
-       </form>
-     </div>
-    <!-- Currenty Online  -->
-    <div class="col-md-3 col-sm-offset-0 panel panel-default">
-      <div class="panel-heading">Currently Online</div>
-       <div class="panel-body">
-          <div  id="users"></div>
-      </div>
-    </div>
-</div> <!--div id="chatWindow" -->
-  </div>
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/bootstrap.js"></script>
+<div id="googleMap" style="width:100%;height:400px;"></div>
+<div>
 
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdMzVWrLl8X8qyTlntv-CK2vChnaUpwiw"></script>
 <script>
-  function onSignIn(googleUser) {
-  var profile = googleUser.getBasicProfile();
-  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-  console.log('Name: ' + profile.getName());
-  console.log('Image URL: ' + profile.getImageUrl());
-  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-}
-  var app = angular.module('googleApiApp',[]);
-  app.controller('googleApiController',function($scope){
-    $scope.aj = function(){
-      if (auth2.isSignedIn.get()) {
-        var profile = auth2.currentUser.get().getBasicProfile();
-        console.log('ID: ' + profile.getId());
-        console.log('Full Name: ' + profile.getName());
-        console.log('Given Name: ' + profile.getGivenName());
-        console.log('Family Name: ' + profile.getFamilyName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail());
-      } 
-    }
-  })
-</script>
-<script>
-    jQuery(function($){
-      var socket = io.connect();
-
-      var title='anonymous';
-
-      var chatOuter=$('#chatWrap');
-      var chatInner=$('#chat');
-
-      $('#nickPage').show();
-      $('#chatPage').hide(); 
-
-       $('#message').keydown(function(event) {
-          if (event.keyCode == 13) {
-               $('#message-box').submit()
-             }
-       });
-
-       $('#nickForm').submit(function(e){
-           e.preventDefault();
-           title = $('#nickname').val();
-           socket.emit('new user',  $('#nickname').val(),  function(data){
-                if(data){
-                  $('#nickPage').hide();
-                    document.title=title;
-                  $('#chatPage').show();
-                }else{
-                  $('#nickError').html("Sorry, that nickname is already taken , try something else");
-                }
-           });
-           $('#nickname').val('');
-       });
-
-       $('#message-box').submit(function(e){
-            e.preventDefault();
-            socket.emit('ClientMessage',    $('#message').val(),    function(data){
-              $('#chat').append("<p align='right' class='error'>"+data+"&nbsp;&nbsp;</p><br/>");
-            });
-            $('#message').val('');
-       });
-
-      socket.on('usernames',   function(data){
-            var html='<ul>';
-            for(i=0;i<data.length;i++){
-              html+='<li><span>'+data[i]+'</span></li>';
+	function initMap() {
+    var map;
+    var bounds = new google.maps.LatLngBounds();
+    var mapOptions = {
+        mapTypeId: 'roadmap'
+    };
+                    
+    // Display a map on the web page
+    map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+    map.setTilt(50);
+        
+    // Multiple markers location, latitude, and longitude
+    var markers = [
+        ['Brooklyn Museum, NY', 40.671531, -73.963588],
+        ['Brooklyn Public Library, NY', 40.672587, -73.968146],
+        ['Prospect Park Zoo, NY', 40.665588, -73.965336]
+    ];
+                        
+    // Info window content
+    var infoWindowContent = [
+        ['<div class="info_content">' +
+        '<h3>Brooklyn Museum</h3>' +
+        '<p>The Brooklyn Museum is an art museum located in the New York City borough of Brooklyn.</p>' + '</div>'],
+        ['<div class="info_content">' +
+        '<h3>Brooklyn Public Library</h3>' +
+        '<p>The Brooklyn Public Library (BPL) is the public library system of the borough of Brooklyn, in New York City.</p>' +
+        '</div>'],
+        ['<div class="info_content">' +
+        '<h3>Prospect Park Zoo</h3>' +
+        '<p>The Prospect Park Zoo is a 12-acre (4.9 ha) zoo located off Flatbush Avenue on the eastern side of Prospect Park, Brooklyn, New York City.</p>' +
+        '</div>']
+    ];
+        
+    // Add multiple markers to map
+    var infoWindow = new google.maps.InfoWindow(), marker, i;
+    
+    // Place each marker on the map  
+    for( i = 0; i < markers.length; i++ ) {
+        var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+        bounds.extend(position);
+        marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: markers[i][0]
+        });
+        
+        // Add info window to marker    
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infoWindow.setContent(infoWindowContent[i][0]);
+                infoWindow.open(map, marker);
             }
-            html=html+'</ul>';
-            $('#users').html(html);
-      });
+        })(marker, i));
 
-      socket.on('new message',function(data){
-         if(data.nick===title){
-           $('#chat').append("<p style='' align='right' class='msg'><b>"+data.nick+" : </b>"+data.msg+"&nbsp;&nbsp;</p>");
-         }else{
-           $('#chat').append("<p style='' align='left' class='msg'><b>&nbsp;&nbsp;&nbsp;"+data.nick+" : </b>"+data.msg+"</p>");
-         }
-         scrollCorrect();
-      });
+        // Center the map to fit all markers on the screen
+        map.fitBounds(bounds);
+    }
 
-      socket.on('whisper', function(data){
-          $('#chat').append("<p align='left' class='whisper'><b>&nbsp;&nbsp;&nbsp;"+data.nick+" : </b>"+data.msg+"</p><br/>");
-
-       });
-
-       socket.on('private', function(data){
-           $('#chat').append("<p align='right' class='whisper'><b>"+title+"@"+data.nick+": </b>"+data.msg+"&nbsp;&nbsp;</p><br/>");
-
-      });
-
-
-      function scrollCorrect(){
-           chatOuter.scrollTop(chatInner.outerHeight());
-      }
+    // Set zoom level
+    var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+        this.setZoom(14);
+        google.maps.event.removeListener(boundsListener);
     });
-
+    
+}
+// Load initialize function
+google.maps.event.addDomListener(window, 'load', initMap);
 </script>
+</div>
+<!--
+To use this code on your website, get a free API key from Google.
+Read more at: http://www.w3schools.com/graphics/google_maps_basic.asp
+-->
 
 </body>
 </html>
